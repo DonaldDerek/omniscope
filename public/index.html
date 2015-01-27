@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=320, initial-scale=1"/>
+	<title>The Omniscope</title>
+	<style type="text/css">
+	html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        canvas {
+            background: #CCC;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+	</style>
+</head>
+<body>		
+	<canvas id="videoCanvas" width="640" height="480">
+		<p>
+			Please use a browser that supports the Canvas Element, like
+			<a href="http://www.google.com/chrome">Chrome</a>,
+			<a href="http://www.mozilla.com/firefox/">Firefox</a>,
+			<a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
+		</p>
+	</canvas>
+	<a>Capture</a>
+	<script type="text/javascript" src="jsmpg.js"></script>
+	<script type="text/javascript">
+		// Show loading notice
+		var canvas = document.getElementById('videoCanvas');
+		var ctx = canvas.getContext('2d');
+		ctx.fillStyle = '#444';
+		ctx.fillText('Loading...', canvas.width/2-30, canvas.height/3);
+		// Setup the WebSocket connection and start the player
+		var url = 'ws://'+document.location.hostname+':8084/';
+		var client = new WebSocket( url );
+		var player = new jsmpeg(client, {canvas:canvas});
+	</script>
+</body>
+</html>
