@@ -1,0 +1,25 @@
+{
+  "name": "omniscope",
+  "version": "1.0.0",
+  "description": "AmScope Microscope 2500X online streaming",
+  "main": "stream-server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DonaldDerek/omniscope.git"
+  },
+  "keywords": [
+    "microscope",
+    "websockets"
+  ],
+  "author": "Donald Derek <ddh@mit.edu>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DonaldDerek/omniscope/issues"
+  },
+  "homepage": "https://github.com/DonaldDerek/omniscope",
+  "dependencies": {
+    "connect": "^3.3.4",
+    "serve-static": "^1.8.1",
+    "ws": "^0.7.0"
+  }
+}
