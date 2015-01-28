@@ -1,38 +1,35 @@
 var STREAM_SECRET = process.argv[2] || 111,
-STREAM_PORT = process.argv[3] || 8082,
-WEBSOCKET_PORT = process.argv[4] || 8084,
-STREAM_MAGIC_BYTES = 'omni';
+	STREAM_PORT = process.argv[3] || 8082,
+	WEBSOCKET_PORT = process.argv[4] || 8084,
+	STREAM_MAGIC_BYTES = 'jsmp'; // Must be 4 bytes
 
 var width = 320,
-height = 240;
+	height = 240;
 
-try {
-	var socketServer = new (require('ws').Server)({port: WEBSOCKET_PORT});
-	socketServer.on('connection', function(socket) {
-		// Send magic bytes and video size to the newly connected socket
-		// struct { char magic[4]; unsigned short width, height;}
-		var streamHeader = new Buffer(8);
-		streamHeader.write(STREAM_MAGIC_BYTES);
-		streamHeader.writeUInt16BE(width, 4);
-		streamHeader.writeUInt16BE(height, 6);
-		socket.send(streamHeader, {binary:true});
+// Websocket Server
+var socketServer = new (require('ws').Server)({port: WEBSOCKET_PORT});
+socketServer.on('connection', function(socket) {
+	// Send magic bytes and video size to the newly connected socket
+	// struct { char magic[4]; unsigned short width, height;}
+	var streamHeader = new Buffer(8);
+	streamHeader.write(STREAM_MAGIC_BYTES);
+	streamHeader.writeUInt16BE(width, 4);
+	streamHeader.writeUInt16BE(height, 6);
+	socket.send(streamHeader, {binary:true});
 
-		console.log( 'New WebSocket Connection ('+socketServer.clients.length+' total)' );
+	console.log( 'New WebSocket Connection ('+socketServer.clients.length+' total)' );
 
-		socket.on('close', function(code, message){
-			console.log( 'Disconnected WebSocket ('+socketServer.clients.length+' total)' );
-		});
+	socket.on('close', function(code, message){
+		console.log( 'Disconnected WebSocket ('+socketServer.clients.length+' total)' );
 	});
+});
 
-	socketServer.broadcast = function(data, opts) {
-		for( var i in this.clients ) {
-			this.clients[i].send(data, opts);
-		}
-	};
-}
-catch(e){
-	console.log(e)
-}
+socketServer.broadcast = function(data, opts) {
+	for( var i in this.clients ) {
+		this.clients[i].send(data, opts);
+	}
+};
+
 
 // HTTP Server to accept incomming MPEG Stream
 var streamServer = require('http').createServer( function(request, response) {
@@ -69,4 +66,4 @@ var app = connect()
 app.use(serveStatic('public', {'index': ['index.html', 'index.htm']}))
 app.listen(8000)
 
-console.log('Omiscope client on ttp://127.0.0.1:8000');
+console.log('Live camera stream client on ttp://127.0.0.1:8000');
