@@ -8,6 +8,7 @@ var width = 320,
 
 // Websocket Server
 var socketServer = new (require('ws').Server)({port: WEBSOCKET_PORT});
+try{
 socketServer.on('connection', function(socket) {
 	// Send magic bytes and video size to the newly connected socket
 	// struct { char magic[4]; unsigned short width, height;}
@@ -29,8 +30,8 @@ socketServer.broadcast = function(data, opts) {
 		this.clients[i].send(data, opts);
 	}
 };
-
-
+}
+catch(e){console.log(e)}
 // HTTP Server to accept incomming MPEG Stream
 var streamServer = require('http').createServer( function(request, response) {
 	var params = request.url.substr(1).split('/');
